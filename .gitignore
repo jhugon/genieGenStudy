@@ -1,2 +1,5 @@
 rewght
 *.o
+*.root
+genie-mcjob-0.status
+log*

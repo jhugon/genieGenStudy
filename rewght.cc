@@ -55,6 +55,14 @@
 #include "Utils/CmdLnArgParser.h"
 
 #include "Conventions/Units.h"
+#include "libxml/parser.h"
+#include "Utils/AppInit.h"
+#include "EVGCore/EventRecord.h"
+#include "GHEP/GHepStatus.h"
+#include "GHEP/GHepParticle.h"
+#include "GHEP/GHepUtils.h"
+#include "Utils/AppInit.h"
+#include "Utils/RunOpt.h"
 
 using std::string;
 using std::vector;
@@ -239,15 +247,35 @@ int main(int argc, char ** argv)
 
   GSystSet & syst = rw.Systematics();
 
-  //
-  // Concrete weight calculators can be retrieved and fine-tuned.
-  // For example:
+  ///////////////////////////////////////////////////////////
+  // Outtree
 
-  GReWeightNuXSecCCQE * rwccqe = 
-    dynamic_cast<GReWeightNuXSecCCQE *> (rw.WghtCalc("xsec_ccqe"));
-  rwccqe -> RewNue    (false); 
-  rwccqe -> RewNuebar (false); 
-  rwccqe -> RewNumubar(false); 
+  TFile * outFile = new TFile("test.root","RECREATE");
+  TTree * outTree = new TTree("weights","weights");
+  TTree * metadataTree = new TTree("metadata","metadata");
+
+
+  Float_t xsec = -999.;
+  std::vector<Float_t> weightsUp;
+  std::vector<Float_t> weightsDown;
+  std::vector<std::string> dialNames;
+
+  outTree->Branch("xsec",&xsec,"xsec/F");
+  outTree->Branch("weightsUp",&weightsUp);
+  outTree->Branch("weightsDown",&weightsDown);
+  metadataTree->Branch("dialNames",&dialNames);
+
+  for(const GSyst_t &dial: syst_dials)
+  {
+    dialNames.push_back(dialPrinter.AsString(dial));
+    weightsUp.push_back(0.);
+    weightsDown.push_back(0.);
+  }
+
+  metadataTree->Fill();
+  metadataTree->Write();
+
+  ///////////////////////////////////////////////////////////
 
   //
   // Event loop
@@ -256,35 +284,44 @@ int main(int argc, char ** argv)
   NtpMCEventRecord * mcrec = 0;
   tree->SetBranchAddress("gmcrec", &mcrec);
 
-  for(int i = 0; i < nev; i++) {
-    tree->GetEntry(i);
+  for(int iEvent = 0; iEvent < nev; iEvent++) {
+    tree->GetEntry(iEvent);
 
     EventRecord & event = *(mcrec->event);
     LOG("test", pNOTICE) << event;
 
-    double wght = -1.;
-    for(const GSyst_t &dial: syst_dials)
+    Float_t wght = -1.;
+    for(unsigned iDial = 0; iDial < syst_dials.size(); iDial++)
     {
+      const GSyst_t dial = syst_dials[iDial];
       LOG("test", pNOTICE) << "Systematic: " << dial << ": "<<dialPrinter.AsString(dial);
+      LOG("test", pNOTICE) << "Setting to 1.0";
       syst.Set(dial, +1.0);
+      LOG("test", pNOTICE) << "Reconfiguring";
       rw.Reconfigure();
       wght = rw.CalcWeight(event);
       LOG("test", pNOTICE) << "Overall weight = " << wght;
+      weightsUp[iDial] = wght;
       syst.Set(dial, -1.0);
       rw.Reconfigure();
       wght = rw.CalcWeight(event);
       LOG("test", pNOTICE) << "Overall weight = " << wght;
-      syst.Set(dial, 0.);
+      weightsDown[iDial] = wght;
+      syst.Set(dial, 0.0);
     }
 
-    double xsec = event.XSec()  / (1E-38 * units::cm2); // convert to 1e-38 cm^2
+    xsec = event.XSec()  / (1E-38 * units::cm2); // convert to 1e-38 cm^2
     LOG("test", pNOTICE) << "Cross Section = " << xsec;
     //double diffxsec = event.DiffXXSec();
     //KinePhaseSpace_t = event.DiffXSecVars();
 
+    outTree->Fill();
+
     mcrec->Clear();
   }
 
+  outTree->Write();
+  outFile->Close();
   file.Close();
 
   LOG("test", pNOTICE)  << "Done!";
@@ -294,6 +331,8 @@ int main(int argc, char ** argv)
 void GetCommandLineArgs(int argc, char ** argv)
 {
   LOG("test", pINFO) << "*** Parsing command line arguments";
+
+  RunOpt::Instance()->ReadFromCommandLine(argc,argv);
 
   CmdLnArgParser parser(argc,argv);
 
@@ -316,5 +355,9 @@ void GetCommandLineArgs(int argc, char ** argv)
        << "Unspecified number of events to analyze - Use all";
     gOptNEvt = -1;
   }
+
+  utils::app_init::MesgThresholds(RunOpt::Instance()->MesgThresholdFiles());
+  GHepRecord::SetPrintLevel(RunOpt::Instance()->EventRecordPrintLevel());
+
 }
 //_________________________________________________________________________________
