@@ -3,3 +3,4 @@ rewght
 *.root
 genie-mcjob-0.status
 log*
+nohup.out
