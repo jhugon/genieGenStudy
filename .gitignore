@@ -1,6 +1,12 @@
 rewght
 *.o
 *.root
+*.pdf
+*.png
+*.d
+*.so
+*.pcm
+*.pyc
 genie-mcjob-0.status
 log*
 nohup.out
