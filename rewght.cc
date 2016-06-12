@@ -134,114 +134,114 @@ int main(int argc, char ** argv)
 
   vector<GSyst_t> syst_dials;
 
-  // NCEL tweaking parameters:
+//  // NCEL tweaking parameters:
   syst_dials.push_back(kXSecTwkDial_MaNCEL);            ///< tweak Ma NCEL, affects dsigma(NCEL)/dQ2 both in shape and normalization
-  syst_dials.push_back(kXSecTwkDial_EtaNCEL);           ///< tweak NCEL strange axial form factor eta, affects dsigma(NCEL)/dQ2 both in shape and normalization
-  // CCQE tweaking parameters:
-  syst_dials.push_back(kXSecTwkDial_NormCCQE);          ///< tweak CCQE normalization (energy independent)
-  //syst_dials.push_back(kXSecTwkDial_NormCCQEenu);       ///< tweak CCQE normalization (maintains dependence on neutrino energy)
-  syst_dials.push_back(kXSecTwkDial_MaCCQEshape);       ///< tweak Ma CCQE, affects dsigma(CCQE)/dQ2 in shape only (normalized to constant integral)
-  //syst_dials.push_back(kXSecTwkDial_MaCCQE);            ///< tweak Ma CCQE, affects dsigma(CCQE)/dQ2 both in shape and normalization
-  syst_dials.push_back(kXSecTwkDial_VecFFCCQEshape);    ///< tweak elastic nucleon form factors (BBA/default -> dipole) - shape only effect of dsigma(CCQE)/dQ2
-  // Resonance neutrino-production tweaking parameters:
-  syst_dials.push_back(kXSecTwkDial_NormCCRES);         ///< tweak CCRES normalization
-  syst_dials.push_back(kXSecTwkDial_MaCCRESshape);      ///< tweak Ma CCRES, affects d2sigma(CCRES)/dWdQ2 in shape only (normalized to constant integral)
-  syst_dials.push_back(kXSecTwkDial_MvCCRESshape);      ///< tweak Mv CCRES, affects d2sigma(CCRES)/dWdQ2 in shape only (normalized to constant integral)
-  //syst_dials.push_back(kXSecTwkDial_MaCCRES);           ///< tweak Ma CCRES, affects d2sigma(CCRES)/dWdQ2 both in shape and normalization
-  //syst_dials.push_back(kXSecTwkDial_MvCCRES);           ///< tweak Mv CCRES, affects d2sigma(CCRES)/dWdQ2 both in shape and normalization
-  syst_dials.push_back(kXSecTwkDial_NormNCRES);         ///< tweak NCRES normalization
-  syst_dials.push_back(kXSecTwkDial_MaNCRESshape);      ///< tweak Ma NCRES, affects d2sigma(NCRES)/dWdQ2 in shape only (normalized to constant integral)
-  syst_dials.push_back(kXSecTwkDial_MvNCRESshape);      ///< tweak Mv NCRES, affects d2sigma(NCRES)/dWdQ2 in shape only (normalized to constant integral)
-  //syst_dials.push_back(kXSecTwkDial_MaNCRES);           ///< tweak Ma NCRES, affects d2sigma(NCRES)/dWdQ2 both in shape and normalization
-  //syst_dials.push_back(kXSecTwkDial_MvNCRES);           ///< tweak Mv NCRES, affects d2sigma(NCRES)/dWdQ2 both in shape and normalization
-  // Coherent pion production tweaking parameters:
-  syst_dials.push_back(kXSecTwkDial_MaCOHpi);           ///< tweak Ma for COH pion production
-  syst_dials.push_back(kXSecTwkDial_R0COHpi);           ///< tweak R0 for COH pion production
-  // Non-resonance background tweaking parameters:
-  syst_dials.push_back(kXSecTwkDial_RvpCC1pi);          ///< tweak the 1pi non-RES bkg in the RES region, for v+p CC
-  syst_dials.push_back(kXSecTwkDial_RvpCC2pi);          ///< tweak the 2pi non-RES bkg in the RES region, for v+p CC
-  syst_dials.push_back(kXSecTwkDial_RvpNC1pi);          ///< tweak the 1pi non-RES bkg in the RES region, for v+p NC
-  syst_dials.push_back(kXSecTwkDial_RvpNC2pi);          ///< tweak the 2pi non-RES bkg in the RES region, for v+p NC
-  syst_dials.push_back(kXSecTwkDial_RvnCC1pi);          ///< tweak the 1pi non-RES bkg in the RES region, for v+n CC
-  syst_dials.push_back(kXSecTwkDial_RvnCC2pi);          ///< tweak the 2pi non-RES bkg in the RES region, for v+n CC
-  syst_dials.push_back(kXSecTwkDial_RvnNC1pi);          ///< tweak the 1pi non-RES bkg in the RES region, for v+n NC
-  syst_dials.push_back(kXSecTwkDial_RvnNC2pi);          ///< tweak the 2pi non-RES bkg in the RES region, for v+n NC
-  syst_dials.push_back(kXSecTwkDial_RvbarpCC1pi);       ///< tweak the 1pi non-RES bkg in the RES region, for vbar+p CC
-  syst_dials.push_back(kXSecTwkDial_RvbarpCC2pi);       ///< tweak the 2pi non-RES bkg in the RES region, for vbar+p CC
-  syst_dials.push_back(kXSecTwkDial_RvbarpNC1pi);       ///< tweak the 1pi non-RES bkg in the RES region, for vbar+p NC
-  syst_dials.push_back(kXSecTwkDial_RvbarpNC2pi);       ///< tweak the 2pi non-RES bkg in the RES region, for vbar+p NC
-  syst_dials.push_back(kXSecTwkDial_RvbarnCC1pi);       ///< tweak the 1pi non-RES bkg in the RES region, for vbar+n CC
-  syst_dials.push_back(kXSecTwkDial_RvbarnCC2pi);       ///< tweak the 2pi non-RES bkg in the RES region, for vbar+n CC
-  syst_dials.push_back(kXSecTwkDial_RvbarnNC1pi);       ///< tweak the 1pi non-RES bkg in the RES region, for vbar+n NC
-  syst_dials.push_back(kXSecTwkDial_RvbarnNC2pi);       ///< tweak the 2pi non-RES bkg in the RES region, for vbar+n NC
-  // DIS tweaking parameters - applied for DIS events with (Q2>Q2o); W>Wo), typically Q2o=1GeV^2, Wo=1.7-2.0GeV
-  syst_dials.push_back(kXSecTwkDial_AhtBY);             ///< tweak the Bodek-Yang model parameter A_{ht} - incl. both shape and normalization effect
-  syst_dials.push_back(kXSecTwkDial_BhtBY);             ///< tweak the Bodek-Yang model parameter B_{ht} - incl. both shape and normalization effect 
-  syst_dials.push_back(kXSecTwkDial_CV1uBY);            ///< tweak the Bodek-Yang model parameter CV1u - incl. both shape and normalization effect 
-  syst_dials.push_back(kXSecTwkDial_CV2uBY);            ///< tweak the Bodek-Yang model parameter CV2u - incl. both shape and normalization effect 
-  //syst_dials.push_back(kXSecTwkDial_AhtBYshape);        ///< tweak the Bodek-Yang model parameter A_{ht} - shape only effect to d2sigma(DIS)/dxdy
-  //syst_dials.push_back(kXSecTwkDial_BhtBYshape);        ///< tweak the Bodek-Yang model parameter B_{ht} - shape only effect to d2sigma(DIS)/dxdy
-  //syst_dials.push_back(kXSecTwkDial_CV1uBYshape);       ///< tweak the Bodek-Yang model parameter CV1u - shape only effect to d2sigma(DIS)/dxdy
-  //syst_dials.push_back(kXSecTwkDial_CV2uBYshape);       ///< tweak the Bodek-Yang model parameter CV2u - shape only effect to d2sigma(DIS)/dxdy
-  syst_dials.push_back(kXSecTwkDial_NormDISCC);         ///< tweak the inclusive DIS CC normalization
-  syst_dials.push_back(kXSecTwkDial_RnubarnuCC);        ///< tweak the ratio of \sigma(\bar\nu CC) / \sigma(\nu CC)
-  syst_dials.push_back(kXSecTwkDial_DISNuclMod);        ///< tweak DIS nuclear modification (shadowing, anti-shadowing, EMC)
-  //
-  syst_dials.push_back(kXSecTwkDial_NC);                ///< 
-
-
-  //
-  // Hadronization (free nucleon target)
-  // 
-
-  syst_dials.push_back(kHadrAGKYTwkDial_xF1pi);         ///< tweak xF distribution for low multiplicity (N + pi) DIS f/s produced by AGKY
-  syst_dials.push_back(kHadrAGKYTwkDial_pT1pi);         ///< tweak pT distribution for low multiplicity (N + pi) DIS f/s produced by AGKY
-
-
-  //
-  // Medium-effects to hadronization
-  // 
-
-  syst_dials.push_back(kHadrNuclTwkDial_FormZone);         ///< tweak formation zone
-
-
-  //
-  // Intranuclear rescattering systematics.
-  // There are 2 sets of parameters:
-  // - parameters that control the total rescattering probability); P(total)
-  // - parameters that control the fraction of each process (`fate')); given a total rescat. prob., P(fate|total)
-  // These parameters are considered separately for pions and nucleons.
-  //
-
-  syst_dials.push_back(kINukeTwkDial_MFP_pi);      ///< tweak mean free path for pions
-  syst_dials.push_back(kINukeTwkDial_MFP_N);       ///< tweak mean free path for nucleons
-  syst_dials.push_back(kINukeTwkDial_FrCEx_pi);    ///< tweak charge exchange probability for pions, for given total rescattering probability
-  syst_dials.push_back(kINukeTwkDial_FrElas_pi);   ///< tweak elastic         probability for pions, for given total rescattering probability
-  syst_dials.push_back(kINukeTwkDial_FrInel_pi);   ///< tweak inelastic       probability for pions, for given total rescattering probability
-  syst_dials.push_back(kINukeTwkDial_FrAbs_pi);    ///< tweak absorption      probability for pions, for given total rescattering probability
-  syst_dials.push_back(kINukeTwkDial_FrPiProd_pi); ///< tweak pion production probability for pions, for given total rescattering probability
-  syst_dials.push_back(kINukeTwkDial_FrCEx_N);     ///< tweak charge exchange probability for nucleons, for given total rescattering probability
-  syst_dials.push_back(kINukeTwkDial_FrElas_N);    ///< tweak elastic         probability for nucleons, for given total rescattering probability
-  syst_dials.push_back(kINukeTwkDial_FrInel_N);    ///< tweak inelastic       probability for nucleons, for given total rescattering probability
-  syst_dials.push_back(kINukeTwkDial_FrAbs_N);     ///< tweak absorption      probability for nucleons, for given total rescattering probability
-  syst_dials.push_back(kINukeTwkDial_FrPiProd_N);  ///< tweak pion production probability for nucleons, for given total rescattering probability
-
-  //
-  // Nuclear model
-  // 
-
-  syst_dials.push_back(kSystNucl_CCQEPauliSupViaKF);   ///<
-  syst_dials.push_back(kSystNucl_CCQEMomDistroFGtoSF); ///<
-
-  //
-  // Resonance decays
-  // 
-
-  syst_dials.push_back(kRDcyTwkDial_BR1gamma);        ///< tweak Resonance -> X + gamma branching ratio, eg Delta+(1232) -> p gamma
-  syst_dials.push_back(kRDcyTwkDial_BR1eta);          ///< tweak Resonance -> X + eta   branching ratio, eg N+(1440) -> p eta
-  syst_dials.push_back(kRDcyTwkDial_Theta_Delta2Npi);  ///< distort pi angular distribution in Delta -> N + pi
-
-  ///////////////////////////////////////////////////////////
+//  syst_dials.push_back(kXSecTwkDial_EtaNCEL);           ///< tweak NCEL strange axial form factor eta, affects dsigma(NCEL)/dQ2 both in shape and normalization
+//  // CCQE tweaking parameters:
+//  syst_dials.push_back(kXSecTwkDial_NormCCQE);          ///< tweak CCQE normalization (energy independent)
+//  //syst_dials.push_back(kXSecTwkDial_NormCCQEenu);       ///< tweak CCQE normalization (maintains dependence on neutrino energy)
+//  syst_dials.push_back(kXSecTwkDial_MaCCQEshape);       ///< tweak Ma CCQE, affects dsigma(CCQE)/dQ2 in shape only (normalized to constant integral)
+syst_dials.push_back(kXSecTwkDial_MaCCQE);            ///< tweak Ma CCQE, affects dsigma(CCQE)/dQ2 both in shape and normalization
+//  syst_dials.push_back(kXSecTwkDial_VecFFCCQEshape);    ///< tweak elastic nucleon form factors (BBA/default -> dipole) - shape only effect of dsigma(CCQE)/dQ2
+//  // Resonance neutrino-production tweaking parameters:
+//  syst_dials.push_back(kXSecTwkDial_NormCCRES);         ///< tweak CCRES normalization
+//  syst_dials.push_back(kXSecTwkDial_MaCCRESshape);      ///< tweak Ma CCRES, affects d2sigma(CCRES)/dWdQ2 in shape only (normalized to constant integral)
+//  syst_dials.push_back(kXSecTwkDial_MvCCRESshape);      ///< tweak Mv CCRES, affects d2sigma(CCRES)/dWdQ2 in shape only (normalized to constant integral)
+syst_dials.push_back(kXSecTwkDial_MaCCRES);           ///< tweak Ma CCRES, affects d2sigma(CCRES)/dWdQ2 both in shape and normalization
+//  //syst_dials.push_back(kXSecTwkDial_MvCCRES);           ///< tweak Mv CCRES, affects d2sigma(CCRES)/dWdQ2 both in shape and normalization
+//  syst_dials.push_back(kXSecTwkDial_NormNCRES);         ///< tweak NCRES normalization
+//  syst_dials.push_back(kXSecTwkDial_MaNCRESshape);      ///< tweak Ma NCRES, affects d2sigma(NCRES)/dWdQ2 in shape only (normalized to constant integral)
+//  syst_dials.push_back(kXSecTwkDial_MvNCRESshape);      ///< tweak Mv NCRES, affects d2sigma(NCRES)/dWdQ2 in shape only (normalized to constant integral)
+syst_dials.push_back(kXSecTwkDial_MaNCRES);           ///< tweak Ma NCRES, affects d2sigma(NCRES)/dWdQ2 both in shape and normalization
+//  //syst_dials.push_back(kXSecTwkDial_MvNCRES);           ///< tweak Mv NCRES, affects d2sigma(NCRES)/dWdQ2 both in shape and normalization
+//  // Coherent pion production tweaking parameters:
+syst_dials.push_back(kXSecTwkDial_MaCOHpi);           ///< tweak Ma for COH pion production
+//  syst_dials.push_back(kXSecTwkDial_R0COHpi);           ///< tweak R0 for COH pion production
+//  // Non-resonance background tweaking parameters:
+//  syst_dials.push_back(kXSecTwkDial_RvpCC1pi);          ///< tweak the 1pi non-RES bkg in the RES region, for v+p CC
+//  syst_dials.push_back(kXSecTwkDial_RvpCC2pi);          ///< tweak the 2pi non-RES bkg in the RES region, for v+p CC
+//  syst_dials.push_back(kXSecTwkDial_RvpNC1pi);          ///< tweak the 1pi non-RES bkg in the RES region, for v+p NC
+//  syst_dials.push_back(kXSecTwkDial_RvpNC2pi);          ///< tweak the 2pi non-RES bkg in the RES region, for v+p NC
+//  syst_dials.push_back(kXSecTwkDial_RvnCC1pi);          ///< tweak the 1pi non-RES bkg in the RES region, for v+n CC
+//  syst_dials.push_back(kXSecTwkDial_RvnCC2pi);          ///< tweak the 2pi non-RES bkg in the RES region, for v+n CC
+//  syst_dials.push_back(kXSecTwkDial_RvnNC1pi);          ///< tweak the 1pi non-RES bkg in the RES region, for v+n NC
+//  syst_dials.push_back(kXSecTwkDial_RvnNC2pi);          ///< tweak the 2pi non-RES bkg in the RES region, for v+n NC
+//  syst_dials.push_back(kXSecTwkDial_RvbarpCC1pi);       ///< tweak the 1pi non-RES bkg in the RES region, for vbar+p CC
+//  syst_dials.push_back(kXSecTwkDial_RvbarpCC2pi);       ///< tweak the 2pi non-RES bkg in the RES region, for vbar+p CC
+//  syst_dials.push_back(kXSecTwkDial_RvbarpNC1pi);       ///< tweak the 1pi non-RES bkg in the RES region, for vbar+p NC
+//  syst_dials.push_back(kXSecTwkDial_RvbarpNC2pi);       ///< tweak the 2pi non-RES bkg in the RES region, for vbar+p NC
+//  syst_dials.push_back(kXSecTwkDial_RvbarnCC1pi);       ///< tweak the 1pi non-RES bkg in the RES region, for vbar+n CC
+//  syst_dials.push_back(kXSecTwkDial_RvbarnCC2pi);       ///< tweak the 2pi non-RES bkg in the RES region, for vbar+n CC
+//  syst_dials.push_back(kXSecTwkDial_RvbarnNC1pi);       ///< tweak the 1pi non-RES bkg in the RES region, for vbar+n NC
+//  syst_dials.push_back(kXSecTwkDial_RvbarnNC2pi);       ///< tweak the 2pi non-RES bkg in the RES region, for vbar+n NC
+//  // DIS tweaking parameters - applied for DIS events with (Q2>Q2o); W>Wo), typically Q2o=1GeV^2, Wo=1.7-2.0GeV
+//  syst_dials.push_back(kXSecTwkDial_AhtBY);             ///< tweak the Bodek-Yang model parameter A_{ht} - incl. both shape and normalization effect
+//  syst_dials.push_back(kXSecTwkDial_BhtBY);             ///< tweak the Bodek-Yang model parameter B_{ht} - incl. both shape and normalization effect 
+//  syst_dials.push_back(kXSecTwkDial_CV1uBY);            ///< tweak the Bodek-Yang model parameter CV1u - incl. both shape and normalization effect 
+//  syst_dials.push_back(kXSecTwkDial_CV2uBY);            ///< tweak the Bodek-Yang model parameter CV2u - incl. both shape and normalization effect 
+//  //syst_dials.push_back(kXSecTwkDial_AhtBYshape);        ///< tweak the Bodek-Yang model parameter A_{ht} - shape only effect to d2sigma(DIS)/dxdy
+//  //syst_dials.push_back(kXSecTwkDial_BhtBYshape);        ///< tweak the Bodek-Yang model parameter B_{ht} - shape only effect to d2sigma(DIS)/dxdy
+//  //syst_dials.push_back(kXSecTwkDial_CV1uBYshape);       ///< tweak the Bodek-Yang model parameter CV1u - shape only effect to d2sigma(DIS)/dxdy
+//  //syst_dials.push_back(kXSecTwkDial_CV2uBYshape);       ///< tweak the Bodek-Yang model parameter CV2u - shape only effect to d2sigma(DIS)/dxdy
+//  syst_dials.push_back(kXSecTwkDial_NormDISCC);         ///< tweak the inclusive DIS CC normalization
+//  syst_dials.push_back(kXSecTwkDial_RnubarnuCC);        ///< tweak the ratio of \sigma(\bar\nu CC) / \sigma(\nu CC)
+//  syst_dials.push_back(kXSecTwkDial_DISNuclMod);        ///< tweak DIS nuclear modification (shadowing, anti-shadowing, EMC)
+//  //
+//  syst_dials.push_back(kXSecTwkDial_NC);                ///< 
+//
+//
+//  //
+//  // Hadronization (free nucleon target)
+//  // 
+//
+//  syst_dials.push_back(kHadrAGKYTwkDial_xF1pi);         ///< tweak xF distribution for low multiplicity (N + pi) DIS f/s produced by AGKY
+//  syst_dials.push_back(kHadrAGKYTwkDial_pT1pi);         ///< tweak pT distribution for low multiplicity (N + pi) DIS f/s produced by AGKY
+//
+//
+//  //
+//  // Medium-effects to hadronization
+//  // 
+//
+//  syst_dials.push_back(kHadrNuclTwkDial_FormZone);         ///< tweak formation zone
+//
+//
+//  //
+//  // Intranuclear rescattering systematics.
+//  // There are 2 sets of parameters:
+//  // - parameters that control the total rescattering probability); P(total)
+//  // - parameters that control the fraction of each process (`fate')); given a total rescat. prob., P(fate|total)
+//  // These parameters are considered separately for pions and nucleons.
+//  //
+//
+syst_dials.push_back(kINukeTwkDial_MFP_pi);      ///< tweak mean free path for pions
+syst_dials.push_back(kINukeTwkDial_MFP_N);       ///< tweak mean free path for nucleons
+//  syst_dials.push_back(kINukeTwkDial_FrCEx_pi);    ///< tweak charge exchange probability for pions, for given total rescattering probability
+//  syst_dials.push_back(kINukeTwkDial_FrElas_pi);   ///< tweak elastic         probability for pions, for given total rescattering probability
+//  syst_dials.push_back(kINukeTwkDial_FrInel_pi);   ///< tweak inelastic       probability for pions, for given total rescattering probability
+//  syst_dials.push_back(kINukeTwkDial_FrAbs_pi);    ///< tweak absorption      probability for pions, for given total rescattering probability
+//  syst_dials.push_back(kINukeTwkDial_FrPiProd_pi); ///< tweak pion production probability for pions, for given total rescattering probability
+//  syst_dials.push_back(kINukeTwkDial_FrCEx_N);     ///< tweak charge exchange probability for nucleons, for given total rescattering probability
+//  syst_dials.push_back(kINukeTwkDial_FrElas_N);    ///< tweak elastic         probability for nucleons, for given total rescattering probability
+//  syst_dials.push_back(kINukeTwkDial_FrInel_N);    ///< tweak inelastic       probability for nucleons, for given total rescattering probability
+//  syst_dials.push_back(kINukeTwkDial_FrAbs_N);     ///< tweak absorption      probability for nucleons, for given total rescattering probability
+//  syst_dials.push_back(kINukeTwkDial_FrPiProd_N);  ///< tweak pion production probability for nucleons, for given total rescattering probability
+//
+//  //
+//  // Nuclear model
+//  // 
+//
+//  syst_dials.push_back(kSystNucl_CCQEPauliSupViaKF);   ///<
+//  syst_dials.push_back(kSystNucl_CCQEMomDistroFGtoSF); ///<
+//
+//  //
+//  // Resonance decays
+//  // 
+//
+//  syst_dials.push_back(kRDcyTwkDial_BR1gamma);        ///< tweak Resonance -> X + gamma branching ratio, eg Delta+(1232) -> p gamma
+//  syst_dials.push_back(kRDcyTwkDial_BR1eta);          ///< tweak Resonance -> X + eta   branching ratio, eg N+(1440) -> p eta
+//  syst_dials.push_back(kRDcyTwkDial_Theta_Delta2Npi);  ///< distort pi angular distribution in Delta -> N + pi
+//
+//  ///////////////////////////////////////////////////////////
 
   GSyst dialPrinter;
 
@@ -288,7 +288,7 @@ int main(int argc, char ** argv)
     tree->GetEntry(iEvent);
 
     EventRecord & event = *(mcrec->event);
-    LOG("test", pNOTICE) << event;
+    LOG("test", pNOTICE) <<"Event: " << iEvent;
 
     Float_t wght = -1.;
     for(unsigned iDial = 0; iDial < syst_dials.size(); iDial++)
@@ -312,8 +312,7 @@ int main(int argc, char ** argv)
 
     xsec = event.XSec()  / (1E-38 * units::cm2); // convert to 1e-38 cm^2
     LOG("test", pNOTICE) << "Cross Section = " << xsec;
-    //double diffxsec = event.DiffXXSec();
-    //KinePhaseSpace_t = event.DiffXSecVars();
+    //int diffxsec = int(event.DiffXXSec());
 
     outTree->Fill();
 
