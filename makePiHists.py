@@ -37,9 +37,11 @@ for fn in glob.glob("pi*.hists.root"):
     probeStr = "#pi^{#minus}"
   isAr = True
   targetStr = "Ar"
+  targetA = 40
   if fn[3] == "H":
     isAr = False
     targetStr = "H"
+    targetA = 1
   title1Str = probeStr + " + " + targetStr
   c.Clear()
   f = root.TFile(fn)
@@ -47,8 +49,18 @@ for fn in glob.glob("pi*.hists.root"):
   firstHist = True
   #####
   leg = root.TLegend(0.7,0.626,0.9,0.886)
+  allHist = f.Get("p_all")
   for cat in categories:
     hist = f.Get("p_"+cat)
+    ####
+    hist.Divide(allHist)
+    fm2tomb = 10.
+    NR      = 3.0
+    R0      = 1.4
+    R = NR * R0 * targetA**0.3333
+    S = fm2tomb * pi * R**2
+    hist.Scale(S)
+    ####
     hist.UseCurrentStyle()
     hist.SetLineColor(colorMap[cat])
     hist.SetMarkerColor(colorMap[cat])
@@ -62,7 +74,7 @@ for fn in glob.glob("pi*.hists.root"):
         hist.GetXaxis().SetTitle(r"p_{#pi^{+}} [GeV]")
       else:
         hist.GetXaxis().SetTitle(r"p_{#pi^{#minus}} [GeV]")
-      hist.GetYaxis().SetTitle(r"Simulated Events / bin")
+      hist.GetYaxis().SetTitle(r"#sigma [mb]")
       hist.GetYaxis().SetTitleOffset(1.5)
       hist.GetYaxis().SetRangeUser(0.1,1e6)
       hist.Draw("")

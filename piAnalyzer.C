@@ -71,6 +71,7 @@ void piAnalyzer(TString inilename="pipH.ginuke.root")
 
   vector<string> cases;
 
+  cases.push_back("all");
   cases.push_back("collision");
   cases.push_back("elastic");
   cases.push_back("inelastic");
@@ -100,6 +101,7 @@ void piAnalyzer(TString inilename="pipH.ginuke.root")
   for(Int_t ipent=0; ipent < npents; ipent++)
   {
     tree->GetEntry(ipent);
+    hists_p["all"]->Fill(p);
     if (nh == 1 && Eh[0] == e)
     {
       continue;
