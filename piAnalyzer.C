@@ -78,7 +78,7 @@ void piAnalyzer(TString inilename="pipH.ginuke.root")
   cases.push_back("single_qx");
   cases.push_back("double_qx");
   cases.push_back("absorption");
-  cases.push_back("normal_scatter");
+  cases.push_back("other");
 
   map<string,TH1F*> hists_p;
   map<string,TEfficiency*> effs_p;
@@ -129,7 +129,7 @@ void piAnalyzer(TString inilename="pipH.ginuke.root")
     bool issingle_qx = false;
     bool isdouble_qx = false;
     bool isabsorption = false;
-    bool isnormal_scatter = false;
+    bool isother = false;
 
     if (nh == 1 && pdgh[0]==probe) // elastic
     {
@@ -140,40 +140,50 @@ void piAnalyzer(TString inilename="pipH.ginuke.root")
     {
       isinelastic = true;
       hists_p["inelastic"]->Fill(p);
-      if (npip == 0 && npim == 0 && npi0 == 0)
-      {
-        isabsorption = true;
-        hists_p["absorption"]->Fill(p);
-      }
-      if (npip == 0 && npim == 0 && npi0 == 1)
-      {
-        issingle_qx = true;
-        hists_p["single_qx"]->Fill(p);
-      }
       if (probe == 211) // pip
       {
-        if (npip == 0 && npim == 1)
+        if (npip == 0 && npim == 0 && npi0 == 0)
+        {
+          isabsorption = true;
+          hists_p["absorption"]->Fill(p);
+        }
+        else if (npip == 0 && npim == 0 && npi0 == 1)
+        {
+          issingle_qx = true;
+          hists_p["single_qx"]->Fill(p);
+        }
+        else if (npip == 0 && npim == 1 && npi0 == 0)
         {
           isdouble_qx = true;
           hists_p["double_qx"]->Fill(p);
         }
-        if (npip == 1 && npim == 0)
+        else
         {
-          isnormal_scatter = true;
-          hists_p["normal_scatter"]->Fill(p);
+          isother = true;
+          hists_p["other"]->Fill(p);
         }
       }
-      if (probe == -211) // pim
+      else if (probe == -211) // pim
       {
-        if (npip == 0 && npim == 1)
+        if (npip == 0 && npim == 0 && npi0 == 0)
         {
-          isnormal_scatter = true;
-          hists_p["normal_scatter"]->Fill(p);
+          isabsorption = true;
+          hists_p["absorption"]->Fill(p);
         }
-        if (npip == 1 && npim == 0)
+        else if (npip == 0 && npim == 0 && npi0 == 1)
+        {
+          issingle_qx = true;
+          hists_p["single_qx"]->Fill(p);
+        }
+        else if (npip == 1 && npim == 0 && npi0 == 0)
         {
           isdouble_qx = true;
           hists_p["double_qx"]->Fill(p);
+        }
+        else
+        {
+          isother = true;
+          hists_p["other"]->Fill(p);
         }
       }
     } // else
@@ -184,7 +194,7 @@ void piAnalyzer(TString inilename="pipH.ginuke.root")
     effs_p["absorption"]->Fill(isabsorption,p);
     effs_p["single_qx"]->Fill(issingle_qx,p);
     effs_p["double_qx"]->Fill(isdouble_qx,p);
-    effs_p["normal_scatter"]->Fill(isnormal_scatter,p);
+    effs_p["other"]->Fill(isother,p);
 
   }
 

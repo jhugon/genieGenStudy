@@ -12,7 +12,7 @@ categories = [
   "single_qx",
   "double_qx",
   "absorption",
-  "normal_scatter",
+  "other",
 ]
 
 colorMap = {
@@ -22,7 +22,7 @@ colorMap = {
   "single_qx":root.kMagenta,
   "double_qx":root.kRed,
   "absorption":root.kGreen,
-  "normal_scatter":root.kOrange,
+  "other":root.kOrange,
 }
 
 c = root.TCanvas("c1")
