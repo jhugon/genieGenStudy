@@ -2,6 +2,7 @@
 
 from helpers import *
 import ROOT as root
+root.gROOT.SetBatch(True)
 import glob
 
 categories = [
@@ -58,7 +59,7 @@ for fn in glob.glob("pi*.hists.root"):
     NR      = 3.0
     R0      = 1.4
     R = NR * R0 * targetA**0.3333
-    S = fm2tomb * pi * R**2
+    S = fm2tomb * math.pi * R**2
     hist.Scale(S)
     ####
     hist.UseCurrentStyle()
