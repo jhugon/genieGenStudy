@@ -79,8 +79,10 @@ void piAnalyzer(TString inilename="pipH.ginuke.root")
   cases.push_back("double_qx");
   cases.push_back("absorption");
   cases.push_back("other");
+  cases.push_back("absorption_and_single_qx");
 
   map<string,TH1F*> hists_p;
+  map<string,TH1F*> hists_ke;
   map<string,TEfficiency*> effs_p;
   for (auto &c: cases)
   {
@@ -88,6 +90,12 @@ void piAnalyzer(TString inilename="pipH.ginuke.root")
     name.append(c);
     TH1F* tmp = new TH1F(name.c_str(),"",50,0.01,5.01);
     hists_p[c] = tmp;
+
+    name = string("ke_");
+    name.append(c);
+    tmp = new TH1F(name.c_str(),"",40,0.0,2.0);
+    hists_ke[c] = tmp;
+
 
     name = string("p_efftocollision_");
     name.append(c);
@@ -102,11 +110,13 @@ void piAnalyzer(TString inilename="pipH.ginuke.root")
   {
     tree->GetEntry(ipent);
     hists_p["all"]->Fill(p);
+    hists_ke["all"]->Fill(ke);
     if (nh == 1 && Eh[0] == e)
     {
       continue;
     }
     hists_p["collision"]->Fill(p);
+    hists_ke["collision"]->Fill(ke);
 
     //cout << "###########################################" << endl;
     //cout << "pent: " << ipent << endl;
@@ -135,32 +145,43 @@ void piAnalyzer(TString inilename="pipH.ginuke.root")
     {
       iselastic = true;
       hists_p["elastic"]->Fill(p);
+      hists_ke["elastic"]->Fill(ke);
     }
     else // inelastic
     {
       isinelastic = true;
       hists_p["inelastic"]->Fill(p);
+      hists_ke["inelastic"]->Fill(ke);
+      if (npip == 0 && npim == 0)
+      {
+          hists_p["absorption_and_single_qx"]->Fill(p);
+          hists_ke["absorption_and_single_qx"]->Fill(ke);
+      }
       if (probe == 211) // pip
       {
         if (npip == 0 && npim == 0 && npi0 == 0)
         {
           isabsorption = true;
           hists_p["absorption"]->Fill(p);
+          hists_ke["absorption"]->Fill(ke);
         }
         else if (npip == 0 && npim == 0 && npi0 == 1)
         {
           issingle_qx = true;
           hists_p["single_qx"]->Fill(p);
+          hists_ke["single_qx"]->Fill(ke);
         }
         else if (npip == 0 && npim == 1 && npi0 == 0)
         {
           isdouble_qx = true;
           hists_p["double_qx"]->Fill(p);
+          hists_ke["double_qx"]->Fill(ke);
         }
         else
         {
           isother = true;
           hists_p["other"]->Fill(p);
+          hists_ke["other"]->Fill(ke);
         }
       }
       else if (probe == -211) // pim
@@ -169,21 +190,25 @@ void piAnalyzer(TString inilename="pipH.ginuke.root")
         {
           isabsorption = true;
           hists_p["absorption"]->Fill(p);
+          hists_ke["absorption"]->Fill(ke);
         }
         else if (npip == 0 && npim == 0 && npi0 == 1)
         {
           issingle_qx = true;
           hists_p["single_qx"]->Fill(p);
+          hists_ke["single_qx"]->Fill(ke);
         }
         else if (npip == 1 && npim == 0 && npi0 == 0)
         {
           isdouble_qx = true;
           hists_p["double_qx"]->Fill(p);
+          hists_ke["double_qx"]->Fill(ke);
         }
         else
         {
           isother = true;
           hists_p["other"]->Fill(p);
+          hists_ke["other"]->Fill(ke);
         }
       }
     } // else
@@ -206,6 +231,7 @@ void piAnalyzer(TString inilename="pipH.ginuke.root")
   for (auto &c: cases)
   {
     hists_p[c]->Write();
+    hists_ke[c]->Write();
     effs_p[c]->Write();
   }
   outfile->Close();

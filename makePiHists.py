@@ -10,9 +10,10 @@ categories = [
   "elastic",
   "inelastic",
   "single_qx",
-  "double_qx",
+  #"double_qx",
   "absorption",
   "other",
+  "absorption_and_single_qx",
 ]
 
 colorMap = {
@@ -20,9 +21,10 @@ colorMap = {
   "elastic":root.kBlue,
   "inelastic":root.kCyan,
   "single_qx":root.kMagenta,
-  "double_qx":root.kRed,
+  #"double_qx":root.kRed,
   "absorption":root.kGreen,
   "other":root.kOrange,
+  "absorption_and_single_qx":root.kRed,
 }
 
 c = root.TCanvas("c1")
@@ -91,6 +93,58 @@ for fn in glob.glob("pi*.hists.root"):
   tlatex.DrawLatex(0.3,0.8,title1Str)
 
   outfn = "pi_p_"+fn[:-11]+".png"
+  c.SaveAs(outfn)
+
+  #########################################
+  # KE
+
+  c.Clear()
+  f = root.TFile(fn)
+  hists = []
+  firstHist = True
+  #####
+  leg = root.TLegend(0.7,0.626,0.9,0.886)
+  allHist = f.Get("ke_all")
+  for cat in categories:
+    hist = f.Get("ke_"+cat)
+    ####
+    hist.Divide(allHist)
+    fm2tomb = 10.
+    NR      = 3.0
+    R0      = 1.4
+    R = NR * R0 * targetA**0.3333
+    S = fm2tomb * math.pi * R**2
+    hist.Scale(S)
+    ####
+    hist.UseCurrentStyle()
+    hist.SetLineColor(colorMap[cat])
+    hist.SetMarkerColor(colorMap[cat])
+    hist.SetMarkerSize(0.0)
+    #hist.Rebin()
+    hists.append(hist)
+    allHists.append(hist)
+    if firstHist:
+      hist.GetXaxis().SetRangeUser(0,5)
+      if isPip:
+        hist.GetXaxis().SetTitle(r"KE_{#pi^{+}} [GeV]")
+      else:
+        hist.GetXaxis().SetTitle(r"KE_{#pi^{#minus}} [GeV]")
+      hist.GetYaxis().SetTitle(r"#sigma [mb]")
+      hist.GetYaxis().SetTitleOffset(1.5)
+      hist.GetYaxis().SetRangeUser(0.1,1e6)
+      hist.Draw("")
+    else:
+      hist.Draw("same")
+    leg.AddEntry(hist,cat,"le")
+    firstHist = False
+  leg.Draw()
+  c.RedrawAxis()
+  
+  tlatex = root.TLatex()
+  tlatex.SetNDC()
+  tlatex.DrawLatex(0.3,0.8,title1Str)
+
+  outfn = "pi_ke_"+fn[:-11]+".png"
   c.SaveAs(outfn)
 
   #########################################
