@@ -94,6 +94,8 @@ for fn in glob.glob("pi*.hists.root"):
 
   outfn = "pi_p_"+fn[:-11]+".png"
   c.SaveAs(outfn)
+  outfn = "pi_p_"+fn[:-11]+".pdf"
+  c.SaveAs(outfn)
 
   #########################################
   # KE
@@ -146,6 +148,8 @@ for fn in glob.glob("pi*.hists.root"):
 
   outfn = "pi_ke_"+fn[:-11]+".png"
   c.SaveAs(outfn)
+  outfn = "pi_ke_"+fn[:-11]+".pdf"
+  c.SaveAs(outfn)
 
   #########################################
   c.Clear()
@@ -181,5 +185,7 @@ for fn in glob.glob("pi*.hists.root"):
   tlatex.DrawLatex(0.3,0.8,title1Str)
 
   outfn = "pi_p_frac_"+fn[:-11]+".png"
+  c.SaveAs(outfn)
+  outfn = "pi_p_frac_"+fn[:-11]+".pdf"
   c.SaveAs(outfn)
   

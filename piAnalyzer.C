@@ -11,11 +11,8 @@
 
 using namespace std;
 
-void piAnalyzer(TString inilename="pipH.ginuke.root")
+void piAnalyzer(TString inilename="pipH.ginuke.root", TString outfilename="pipH.hists.root")
 {
-  TString weightfilename = inilename.Copy();
-  TString outfilename = inilename.Copy();
-  outfilename.ReplaceAll("ginuke","hists");
   cout << "Input file: " << inilename << endl;
   cout << "Output file: " << outfilename << endl;
 

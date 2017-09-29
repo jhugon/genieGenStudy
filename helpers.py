@@ -9,9 +9,9 @@ from math import exp
 from math import sqrt
 from math import log10
 import math
-import numpy
-import scipy
-import scipy.stats
+#import numpy
+#import scipy
+#import scipy.stats
 import array
 import os
 import sys
