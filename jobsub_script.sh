@@ -7,6 +7,9 @@ echo "starting gevgen job"
 cd $TEMP
 echo "Hostname:"
 hostname
+echo "PROBEID: $PROBEID"
+echo "TARGETID: $TARGETID"
+echo "PROCESS: $PROCESS"
 echo "CWD:"
 pwd
 
@@ -25,31 +28,24 @@ messengerfile=$GENIE/config/Messenger_laconic.xml
 
 echo "Staring gevgen:"
 
-gevgen_hadron -n $N -p -211 -t 1000180400 -k $energy --run 116 \
+gevgen_hadron -n $N -p $PROBEID -t $TARGETID -k $energy --run $PROCESS \
     -f $pionFlux \
     --message-thresholds $messengerfile \
     -m "hA" \
-    --seed 2989819 --cross-sections $xsfile >& logGen116
-
-mv gntp.inuke.0.ghep.root pimAr.ghep.root
+    --seed 2989819 --cross-sections $xsfile >& logGen
 
 echo "Staring gntpc:"
 
 for f in *.ghep.root; do
-  if [[ $f == "pi"* ]]
-  then
-    gntpc -i $f -f ginuke >& /dev/null
-  else
-    gntpc -i $f -f gst >& /dev/null
-  fi
+  gntpc -i $f -f ginuke >& /dev/null
 done
 
 echo "ls CWD:"
 ls -lhtr
 
 echo "CONDOR_DIR_OUT: $CONDOR_DIR_OUT"
-echo "copying to CONDOR_DIR_OUT:"
-cp * $CONDOR_DIR_OUT
+echo "copying to CONDOR_DIR_OUT/$PROCESS:"
+cp * $CONDOR_DIR_OUT/$PROCESS
 
 echo "ls CONDOR_DIR_OUT:"
 ls -lhtr $CONDOR_DIR_OUT
