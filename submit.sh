@@ -14,31 +14,31 @@ for isAr40 in 0 1; do
   fi
   
   export PROBEID="211"
-  outdir=/pnfs/lariat/scratch/users/jhugon/genie/genie_"$PROBEID"_"$targetstr"_v2
+  outdir=/pnfs/lariat/scratch/users/jhugon/genie/genie_"$PROBEID"_"$targetstr"_v3
   command="jobsub_submit --expected-lifetime=$joblifetime -dOUT $outdir -e PROBEID -e TARGETID $script"
   echo $command
   $command
   
   export PROBEID="-211"
-  outdir=/pnfs/lariat/scratch/users/jhugon/genie/genie_"$PROBEID"_"$targetstr"_v2
+  outdir=/pnfs/lariat/scratch/users/jhugon/genie/genie_"$PROBEID"_"$targetstr"_v3
   command="jobsub_submit --expected-lifetime=$joblifetime -dOUT $outdir -e PROBEID -e TARGETID $script"
   echo $command
   $command
   
   export PROBEID="321"
-  outdir=/pnfs/lariat/scratch/users/jhugon/genie/genie_"$PROBEID"_"$targetstr"_v2
+  outdir=/pnfs/lariat/scratch/users/jhugon/genie/genie_"$PROBEID"_"$targetstr"_v3
   command="jobsub_submit --expected-lifetime=$joblifetime -dOUT $outdir -e PROBEID -e TARGETID $script"
   echo $command
   $command
   
   export PROBEID="-321"
-  outdir=/pnfs/lariat/scratch/users/jhugon/genie/genie_"$PROBEID"_"$targetstr"_v2
+  outdir=/pnfs/lariat/scratch/users/jhugon/genie/genie_"$PROBEID"_"$targetstr"_v3
   command="jobsub_submit --expected-lifetime=$joblifetime -dOUT $outdir -e PROBEID -e TARGETID $script"
   echo $command
   $command
   
   export PROBEID="2212"
-  outdir=/pnfs/lariat/scratch/users/jhugon/genie/genie_"$PROBEID"_"$targetstr"_v2
+  outdir=/pnfs/lariat/scratch/users/jhugon/genie/genie_"$PROBEID"_"$targetstr"_v3
   command="jobsub_submit --expected-lifetime=$joblifetime -dOUT $outdir -e PROBEID -e TARGETID $script"
   echo $command
   $command

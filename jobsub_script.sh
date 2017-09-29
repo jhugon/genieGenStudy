@@ -18,7 +18,7 @@ version=v06_34_01
 qual=e14:prof
 setup larsoft $version -q $qual
 
-N=1000000
+N=100000
 
 pionFlux="1"
 energy=0.01,2.01
