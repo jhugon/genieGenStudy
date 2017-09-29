@@ -18,7 +18,7 @@ version=v06_34_01
 qual=e14:prof
 setup larsoft $version -q $qual
 
-N=1000000
+N=1000
 
 pionFlux="1"
 energy=0.01,2.01
@@ -43,11 +43,17 @@ done
 echo "ls CWD:"
 ls -lhtr
 
+outdir=$CONDOR_DIR_OUT/$PROCESS
 echo "CONDOR_DIR_OUT: $CONDOR_DIR_OUT"
-echo "copying to CONDOR_DIR_OUT/$PROCESS:"
-cp * $CONDOR_DIR_OUT/$PROCESS
+echo "out subdir: $outdir"
+echo "making out subdir"
+mkdir -p $outdir
+echo "copying to out subdir"
+cp * $outdir
 
 echo "ls CONDOR_DIR_OUT:"
 ls -lhtr $CONDOR_DIR_OUT
+echo "ls $outdir:"
+ls -lhtr $outdir
 
 echo "done!"
