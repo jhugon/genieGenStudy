@@ -5,56 +5,27 @@ import ROOT as root
 root.gROOT.SetBatch(True)
 import glob
 
-categories = [
-  "collision",
-  "elastic",
-  "inelastic",
-  "single_qx",
-  #"double_qx",
-  "absorption",
-  "other",
-  "absorption_and_single_qx",
-]
-
-colorMap = {
-  "collision":root.kBlack,
-  "elastic":root.kBlue,
-  "inelastic":root.kCyan,
-  "single_qx":root.kMagenta,
-  #"double_qx":root.kRed,
-  "absorption":root.kGreen,
-  "other":root.kOrange,
-  "absorption_and_single_qx":root.kRed,
-}
-
-c = root.TCanvas("c1")
-c.SetLogy()
-divideHist = None
+allFiles = []
 allHists = []
 
-for fn in glob.glob("pi*.hists.root"):
-  isPip = True
-  probeStr = "#pi^{+}"
-  if fn[:3] == "pim":
-    isPip = False
-    probeStr = "#pi^{#minus}"
+def makeXSHists(fn,histPrefix,categories):
+  """
+  Makes a list of cross-section histograms from
+    an input file, histPrefix ("ke_" or "p_")
+    and a list of category names.
+  """
   isAr = True
-  targetStr = "Ar"
   targetA = 40
   if fn[3] == "H":
     isAr = False
-    targetStr = "H"
     targetA = 1
-  title1Str = probeStr + " + " + targetStr
-  c.Clear()
   f = root.TFile(fn)
+  allFiles.append(f)
   hists = []
-  firstHist = True
-  #####
-  leg = root.TLegend(0.7,0.626,0.9,0.886)
-  allHist = f.Get("p_all")
+  allHist = f.Get(histPrefix+"all")
+  allHists.append(allHist)
   for cat in categories:
-    hist = f.Get("p_"+cat)
+    hist = f.Get(histPrefix+cat)
     ####
     hist.Divide(allHist)
     fm2tomb = 10.
@@ -64,128 +35,131 @@ for fn in glob.glob("pi*.hists.root"):
     S = fm2tomb * math.pi * R**2
     hist.Scale(S)
     ####
-    hist.UseCurrentStyle()
-    hist.SetLineColor(colorMap[cat])
-    hist.SetMarkerColor(colorMap[cat])
-    hist.SetMarkerSize(0.0)
-    #hist.Rebin()
     hists.append(hist)
     allHists.append(hist)
-    if firstHist:
-      hist.GetXaxis().SetRangeUser(0,5)
-      if isPip:
-        hist.GetXaxis().SetTitle(r"p_{#pi^{+}} [GeV]")
-      else:
-        hist.GetXaxis().SetTitle(r"p_{#pi^{#minus}} [GeV]")
-      hist.GetYaxis().SetTitle(r"#sigma [mb]")
-      hist.GetYaxis().SetTitleOffset(1.5)
-      hist.GetYaxis().SetRangeUser(0.1,1e6)
-      hist.Draw("")
-    else:
-      hist.Draw("same")
-    leg.AddEntry(hist,cat,"le")
-    firstHist = False
-  leg.Draw()
-  c.RedrawAxis()
-  
-  tlatex = root.TLatex()
-  tlatex.SetNDC()
-  tlatex.DrawLatex(0.3,0.8,title1Str)
+  return hists
 
-  outfn = "pi_p_"+fn[:-11]+".png"
-  c.SaveAs(outfn)
-  outfn = "pi_p_"+fn[:-11]+".pdf"
-  c.SaveAs(outfn)
-
-  #########################################
-  # KE
-
+def plotHists(hists,titles,colors,filenameprefix,xtitle="",ytitle="#sigma [mb]",suptitle=""):
   c.Clear()
-  f = root.TFile(fn)
-  hists = []
+  axisHist = makeStdAxisHist(hists,logy=c.GetLogy())
+  setHistTitles(axisHist,xtitle,ytitle)
+  axisHist.Draw()
   firstHist = True
   #####
-  leg = root.TLegend(0.7,0.626,0.9,0.886)
-  allHist = f.Get("ke_all")
-  for cat in categories:
-    hist = f.Get("ke_"+cat)
-    ####
-    hist.Divide(allHist)
-    fm2tomb = 10.
-    NR      = 3.0
-    R0      = 1.4
-    R = NR * R0 * targetA**0.3333
-    S = fm2tomb * math.pi * R**2
-    hist.Scale(S)
-    ####
+  for hist,title,color in zip(hists,titles,colors):
     hist.UseCurrentStyle()
-    hist.SetLineColor(colorMap[cat])
-    hist.SetMarkerColor(colorMap[cat])
+    hist.SetLineWidth(2)
+    hist.SetLineColor(color)
+    hist.SetMarkerColor(color)
     hist.SetMarkerSize(0.0)
-    #hist.Rebin()
-    hists.append(hist)
     allHists.append(hist)
-    if firstHist:
-      hist.GetXaxis().SetRangeUser(0,5)
-      if isPip:
-        hist.GetXaxis().SetTitle(r"KE_{#pi^{+}} [GeV]")
-      else:
-        hist.GetXaxis().SetTitle(r"KE_{#pi^{#minus}} [GeV]")
-      hist.GetYaxis().SetTitle(r"#sigma [mb]")
-      hist.GetYaxis().SetTitleOffset(1.5)
-      hist.GetYaxis().SetRangeUser(0.1,1e6)
-      hist.Draw("")
-    else:
-      hist.Draw("same")
-    leg.AddEntry(hist,cat,"le")
-    firstHist = False
-  leg.Draw()
+    hist.Draw("histsame")
+  leg = drawNormalLegend(hists,titles,option="l")
+  drawStandardCaptions(c,suptitle,preliminaryString="GENIE Simulation")
   c.RedrawAxis()
   
-  tlatex = root.TLatex()
-  tlatex.SetNDC()
-  tlatex.DrawLatex(0.3,0.8,title1Str)
-
-  outfn = "pi_ke_"+fn[:-11]+".png"
+  outfn = filenameprefix+".png"
   c.SaveAs(outfn)
-  outfn = "pi_ke_"+fn[:-11]+".pdf"
+  outfn = filenameprefix+".pdf"
   c.SaveAs(outfn)
 
-  #########################################
+def plotStack(hists,titles,colors,filenameprefix,xtitle="",ytitle="#sigma [mb]",suptitle=""):
   c.Clear()
-  effs = []
-  firstHist = True
-  #####
-  #c.SetLogy(False)
-  #taxisHist = root.TH2F("taxis_"+fn,"",1,0.,5.,1,0,1.5)
-  taxisHist = root.TH2F("taxis_"+fn,"",1,0.,5.,1,1e-3,1e2)
-  if isPip:
-    taxisHist.SetTitle(r";p_{#pi^{#plus}} [GeV];Fraction of Collisions")
-  else:
-    taxisHist.SetTitle(r";p_{#pi^{#minus}} [GeV];Fraction of Collisions")
-  taxisHist.Draw()
-  leg = root.TLegend(0.7,0.626,0.9,0.886)
-  for cat in categories:
-    hist = f.Get("p_efftocollision_"+cat)
-    hist.SetTitle(";p;Fraction of Inelastic Collisions")
-    hist.SetLineWidth(gStyle.GetHistLineWidth())
-    hist.SetLineColor(colorMap[cat])
-    hist.SetMarkerColor(colorMap[cat])
+  stack = root.THStack()
+  sumHist = None
+  for hist,color in zip(reversed(hists),reversed(colors)):
+    hist.UseCurrentStyle()
+    hist.SetLineColor(color)
+    hist.SetMarkerColor(color)
+    hist.SetFillColor(color)
     hist.SetMarkerSize(0.0)
-    #hist.Rebin()
-    effs.append(hist)
-    hist.Draw("Zsame")
-    leg.AddEntry(hist,cat,"le")
-    firstHist = False
-  leg.Draw("")
+    allHists.append(hist)
+    stack.Add(hist)
+    if sumHist is None:
+        sumHist = hist.Clone(hist.GetName()+"_sumHist")
+    else:
+        sumHist.Add(hist)
+  axisHist = makeStdAxisHist([sumHist],logy=c.GetLogy())
+  setHistTitles(axisHist,xtitle,ytitle)
+  axisHist.Draw()
+  stack.Draw("histsame")
+  #####
+  leg = drawNormalLegend(hists,titles,option="f")
+  drawStandardCaptions(c,suptitle,preliminaryString="GENIE Simulation")
   c.RedrawAxis()
   
-  tlatex = root.TLatex()
-  tlatex.SetNDC()
-  tlatex.DrawLatex(0.3,0.8,title1Str)
+  outfn = filenameprefix+".png"
+  c.SaveAs(outfn)
+  outfn = filenameprefix+".pdf"
+  c.SaveAs(outfn)
 
-  outfn = "pi_p_frac_"+fn[:-11]+".png"
-  c.SaveAs(outfn)
-  outfn = "pi_p_frac_"+fn[:-11]+".pdf"
-  c.SaveAs(outfn)
-  
+c = root.TCanvas("c1")
+
+for fn in glob.glob("*.hists.root"):
+  probeStr = "??"
+  if fn[:3] == "pip":
+    probeStr = "#pi^{+}"
+  elif fn[:3] == "pim":
+    probeStr = "#pi^{#minus}"
+  elif fn[:2] == "kp":
+    probeStr = "K^{+}"
+  elif fn[:2] == "km":
+    probeStr = "K^{#minus}"
+  elif fn[:1] == "p":
+    probeStr = "p"
+  targetStr = "Ar"
+  if fn[3] == "H":
+    isAr = False
+    targetStr = "H"
+  suptitle = probeStr + " + " + targetStr
+  outfnRun = fn.split(".")[0]
+
+  categories = [
+    "collision",
+    "scatter_1deg",
+    "scatter_2deg",
+    "scatter_5deg",
+    "scatter_10deg",
+  ]
+
+  titles = [
+    "Collision",
+    "Scatter >1#circ",
+    "Scatter >2#circ",
+    "Scatter >5#circ",
+    "Scatter >10#circ",
+  ]
+
+  hists = makeXSHists(fn,"ke_",categories)
+  c.SetLogy(False)
+  plotHists(hists,titles,[1]+COLORLIST[:len(hists)-1],"ke_angle_"+outfnRun,xtitle="KE_{"+probeStr+"} [MeV]",suptitle=suptitle)
+
+  hists = makeXSHists(fn,"ke_",["elastic","inelastic"])
+  c.SetLogy(False)
+  plotStack(hists,["Elastic","Inelastic"],COLORLIST[:len(hists)],"ke_lastic_"+outfnRun,xtitle="KE_{"+probeStr+"} [MeV]",suptitle=suptitle)
+
+  if fn[:2] != "pi":
+    continue
+
+  categories = [
+    "elastic",
+    "absorption",
+    "other",
+    "single_qx",
+    "double_qx",
+  ]
+
+  titles = [
+    "Elastic",
+    "Absorption",
+    "Other",
+    "Single Ch. Ex.",
+    "Double Ch. Ex.",
+  ]
+
+
+  hists = makeXSHists(fn,"ke_",categories)
+  c.SetLogy(False)
+  plotHists(hists,titles,COLORLIST[:len(hists)],"ke_type_"+outfnRun,xtitle="KE_{"+probeStr+"} [MeV]",suptitle=suptitle)
+  plotStack(hists,titles,COLORLIST[:len(hists)],"ke_type_stack_"+outfnRun,xtitle="KE_{"+probeStr+"} [MeV]",suptitle=suptitle)
+

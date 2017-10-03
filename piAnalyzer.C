@@ -3,11 +3,14 @@
 #include <string>
 #include <algorithm>
 #include <map>
+#include <cmath>
 #include "TString.h"
 #include "TFile.h"
 #include "TTree.h"
 #include "TH1F.h"
 #include "TEfficiency.h"
+
+const double pi = 3.14159265359;
 
 using namespace std;
 
@@ -77,6 +80,10 @@ void piAnalyzer(TString inilename="pipH.ginuke.root", TString outfilename="pipH.
   cases.push_back("absorption");
   cases.push_back("other");
   cases.push_back("absorption_and_single_qx");
+  cases.push_back("scatter_1deg");
+  cases.push_back("scatter_2deg");
+  cases.push_back("scatter_5deg");
+  cases.push_back("scatter_10deg");
 
   map<string,TH1F*> hists_p;
   map<string,TH1F*> hists_ke;
@@ -108,6 +115,30 @@ void piAnalyzer(TString inilename="pipH.ginuke.root", TString outfilename="pipH.
     tree->GetEntry(ipent);
     hists_p["all"]->Fill(p);
     hists_ke["all"]->Fill(ke);
+
+    if (nh > 0) // I think always, but lets not sefgault
+    {
+      double ph = sqrt(pow(pxh[0],2)+pow(pyh[0],2)+pow(pzh[0],2));
+      float thetaz = acos(pzh[0]/ph);
+      float thetazDeg = thetaz * 180./pi;
+      if (thetazDeg > 1.)
+      {
+        hists_ke["scatter_1deg"]->Fill(ke);
+      }
+      if (thetazDeg > 2.)
+      {
+        hists_ke["scatter_2deg"]->Fill(ke);
+      }
+      if (thetazDeg > 5.)
+      {
+        hists_ke["scatter_5deg"]->Fill(ke);
+      }
+      if (thetazDeg > 10.)
+      {
+        hists_ke["scatter_10deg"]->Fill(ke);
+      }
+    }
+
     if (nh == 1 && Eh[0] == e)
     {
       continue;
