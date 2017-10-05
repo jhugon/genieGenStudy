@@ -16,7 +16,8 @@ def makeXSHists(fn,histPrefix,categories):
   """
   isAr = True
   targetA = 40
-  if fn[3] == "H":
+  outfnRun = fn.split(".")[0]
+  if outfnRun[-1] == "H":
     isAr = False
     targetA = 1
   f = root.TFile(fn)
@@ -94,8 +95,12 @@ def plotStack(hists,titles,colors,filenameprefix,xtitle="",ytitle="#sigma [mb]",
   c.SaveAs(outfn)
 
 c = root.TCanvas("c1")
-
-for fn in glob.glob("*.hists.root"):
+allCollision = []
+allElastic = []
+allInelastic = []
+allTitles = []
+allPiTitles = []
+for fn in sorted(glob.glob("*.hists.root")):
   probeStr = "??"
   if fn[:3] == "pip":
     probeStr = "#pi^{+}"
@@ -107,12 +112,15 @@ for fn in glob.glob("*.hists.root"):
     probeStr = "K^{#minus}"
   elif fn[:1] == "p":
     probeStr = "p"
+  outfnRun = fn.split(".")[0]
   targetStr = "Ar"
-  if fn[3] == "H":
+  if outfnRun[-1] == "H":
     isAr = False
     targetStr = "H"
   suptitle = probeStr + " + " + targetStr
-  outfnRun = fn.split(".")[0]
+  allTitles.append(suptitle)
+
+  print suptitle,fn
 
   categories = [
     "collision",
@@ -131,12 +139,16 @@ for fn in glob.glob("*.hists.root"):
   ]
 
   hists = makeXSHists(fn,"ke_",categories)
+  allCollision.append(hists[0])
   c.SetLogy(False)
   plotHists(hists,titles,[1]+COLORLIST[:len(hists)-1],"ke_angle_"+outfnRun,xtitle="KE_{"+probeStr+"} [MeV]",suptitle=suptitle)
 
   hists = makeXSHists(fn,"ke_",["elastic","inelastic"])
   c.SetLogy(False)
   plotStack(hists,["Elastic","Inelastic"],COLORLIST[:len(hists)],"ke_lastic_"+outfnRun,xtitle="KE_{"+probeStr+"} [MeV]",suptitle=suptitle)
+
+  allElastic.append(hists[0])
+  allInelastic.append(hists[1])
 
   if fn[:2] != "pi":
     continue
@@ -163,3 +175,14 @@ for fn in glob.glob("*.hists.root"):
   plotHists(hists,titles,COLORLIST[:len(hists)],"ke_type_"+outfnRun,xtitle="KE_{"+probeStr+"} [MeV]",suptitle=suptitle)
   plotStack(hists,titles,COLORLIST[:len(hists)],"ke_type_stack_"+outfnRun,xtitle="KE_{"+probeStr+"} [MeV]",suptitle=suptitle)
 
+
+  allPiTitles.append(suptitle)
+
+allArTitles = [i for i in allTitles if "Ar" in i]
+allArCollision = [allCollision[i] for i in range(len(allTitles)) if "Ar" in allTitles[i]]
+allArElastic = [allElastic[i] for i in range(len(allTitles)) if "Ar" in allTitles[i]]
+allArInelastic = [allInelastic[i] for i in range(len(allTitles)) if "Ar" in allTitles[i]]
+
+plotHists(allArCollision,allArTitles,COLORLIST[:len(allArCollision)],"all_ke_collision",xtitle="KE [MeV]",suptitle="Collision")
+plotHists(allArElastic,allArTitles,COLORLIST[:len(allArElastic)],"all_ke_elastic",xtitle="KE [MeV]",suptitle="Elastic")
+plotHists(allArInelastic,allArTitles,COLORLIST[:len(allArInelastic)],"all_ke_inelastic",xtitle="KE [MeV]",suptitle="Inelastic")
